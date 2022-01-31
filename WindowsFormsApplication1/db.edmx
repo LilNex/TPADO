@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="tpdbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="adherent">
+          <Key>
+            <PropertyRef Name="codeA" />
+          </Key>
+          <Property Name="codeA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nomA" Type="varchar" MaxLength="20" />
+          <Property Name="adresse" Type="varchar" MaxLength="500" />
+          <Property Name="dateInscription" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'tpdb.dbo.emprunt' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="emprunt">
+          <Property Name="codeA" Type="int" />
+          <Property Name="codel" Type="int" />
+          <Property Name="dateEmprunt" Type="datetime" />
+          <Property Name="dateRetour" Type="datetime" />
+        </EntityType>-->
+        <EntityType Name="livre">
+          <Key>
+            <PropertyRef Name="codel" />
+          </Key>
+          <Property Name="codel" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="titre" Type="varchar" MaxLength="20" />
+          <Property Name="auteur" Type="varchar" MaxLength="20" />
+          <Property Name="nbEx" Type="int" />
+          <Property Name="codeTh" Type="int" />
+        </EntityType>
+        <EntityType Name="theme">
+          <Key>
+            <PropertyRef Name="codeTh" />
+          </Key>
+          <Property Name="codeTh" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intitule" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <!--Errors Found During Generation:
+error 6004: The table 'tpdb.dbo.emprunt' is referenced by a relationship, but cannot be found.
+        <Association Name="FK__emprunt__codeA__164452B1" />-->
+        <!--Errors Found During Generation:
+error 6004: The table 'tpdb.dbo.emprunt' is referenced by a relationship, but cannot be found.
+        <Association Name="FK__emprunt__codel__173876EA" />-->
+        <Association Name="FK__livre__codeTh__1273C1CD">
+          <End Role="theme" Type="Self.theme" Multiplicity="0..1" />
+          <End Role="livre" Type="Self.livre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="theme">
+              <PropertyRef Name="codeTh" />
+            </Principal>
+            <Dependent Role="livre">
+              <PropertyRef Name="codeTh" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="tpdbModelStoreContainer">
+          <EntitySet Name="adherent" EntityType="Self.adherent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="livre" EntityType="Self.livre" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="theme" EntityType="Self.theme" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__livre__codeTh__1273C1CD" Association="Self.FK__livre__codeTh__1273C1CD">
+            <End Role="theme" EntitySet="theme" />
+            <End Role="livre" EntitySet="livre" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="tpdbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="adherent">
+          <Key>
+            <PropertyRef Name="codeA" />
+          </Key>
+          <Property Name="codeA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nomA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="adresse" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="dateInscription" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="livre">
+          <Key>
+            <PropertyRef Name="codel" />
+          </Key>
+          <Property Name="codel" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="titre" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="auteur" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="nbEx" Type="Int32" />
+          <Property Name="codeTh" Type="Int32" />
+          <NavigationProperty Name="theme" Relationship="Self.FK__livre__codeTh__1273C1CD" FromRole="livre" ToRole="theme" />
+        </EntityType>
+        <EntityType Name="theme">
+          <Key>
+            <PropertyRef Name="codeTh" />
+          </Key>
+          <Property Name="codeTh" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intitule" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="livres" Relationship="Self.FK__livre__codeTh__1273C1CD" FromRole="theme" ToRole="livre" />
+        </EntityType>
+        <Association Name="FK__livre__codeTh__1273C1CD">
+          <End Role="theme" Type="Self.theme" Multiplicity="0..1" />
+          <End Role="livre" Type="Self.livre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="theme">
+              <PropertyRef Name="codeTh" />
+            </Principal>
+            <Dependent Role="livre">
+              <PropertyRef Name="codeTh" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="tpdbEntities2" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="adherents" EntityType="Self.adherent" />
+          <EntitySet Name="livres" EntityType="Self.livre" />
+          <EntitySet Name="themes" EntityType="Self.theme" />
+          <AssociationSet Name="FK__livre__codeTh__1273C1CD" Association="Self.FK__livre__codeTh__1273C1CD">
+            <End Role="theme" EntitySet="themes" />
+            <End Role="livre" EntitySet="livres" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="tpdbModelStoreContainer" CdmEntityContainer="tpdbEntities2">
+          <EntitySetMapping Name="adherents">
+            <EntityTypeMapping TypeName="tpdbModel.adherent">
+              <MappingFragment StoreEntitySet="adherent">
+                <ScalarProperty Name="codeA" ColumnName="codeA" />
+                <ScalarProperty Name="nomA" ColumnName="nomA" />
+                <ScalarProperty Name="adresse" ColumnName="adresse" />
+                <ScalarProperty Name="dateInscription" ColumnName="dateInscription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="livres">
+            <EntityTypeMapping TypeName="tpdbModel.livre">
+              <MappingFragment StoreEntitySet="livre">
+                <ScalarProperty Name="codel" ColumnName="codel" />
+                <ScalarProperty Name="titre" ColumnName="titre" />
+                <ScalarProperty Name="auteur" ColumnName="auteur" />
+                <ScalarProperty Name="nbEx" ColumnName="nbEx" />
+                <ScalarProperty Name="codeTh" ColumnName="codeTh" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="themes">
+            <EntityTypeMapping TypeName="tpdbModel.theme">
+              <MappingFragment StoreEntitySet="theme">
+                <ScalarProperty Name="codeTh" ColumnName="codeTh" />
+                <ScalarProperty Name="intitule" ColumnName="intitule" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
